@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Enseignants</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-inline-size: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-block-end: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-block-end: 10px;
+        }
+
+        select {
+            inline-size: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-block-end: 20px;
+        }
+
+        .enseignant-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-block-end: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .enseignant-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .enseignant-avatar img {
+            inline-size: 100%;
+            display: block;
+        }
+
+        .enseignant-info {
+            padding: 20px;
+        }
+
+        .enseignant-info h2 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
+            margin-block-end: 5px;
+        }
+
+        .grade {
+            margin: 0;
+            color: #666;
+            font-size: 16px;
+            margin-block-end: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Liste des Enseignants</h1>
+        <label for="session">Sélectionnez une session :</label>
+        <select name="session" id="session">
+            <% sessions.forEach(session => { %>
+                <option value="<%= session._id.toString() %>">
+                    <%= session.begin.getDate() %> / <%= session.begin.getMonth() + 1 %> / <%= session.begin.getFullYear() %> - 
+                    <%= session.end.getDate() %> / <%= session.end.getMonth() + 1 %> / <%= session.end.getFullYear() %>
+                </option>
+            <% }) %>
+        </select>
+        
+        <div class="enseignants-list">
+            <% enseignantsList.forEach(enseignant => { %>
+                <a href="#" class="enseignant-card" data-enseignant-id="<%= enseignant._id %>">
+                    <!-- Utilisation de l'ID de l'enseignant comme attribut de données -->
+                    <div class="enseignant-avatar">
+                        <img src="<%= enseignant.avatar %>" alt="Avatar de <%= enseignant.nom %>">
+                    </div>
+                    <div class="enseignant-info">
+                        <h2><%= enseignant.nom %></h2>
+                        <p class="grade">Grade: <%= enseignant.grade %></p>
+                    </div>
+                </a>
+            <% }) %>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const sessionSelect = document.getElementById("session");
+            const enseignantLinks = document.querySelectorAll(".enseignants-list .enseignant-card");
+
+            // Fonction pour mettre à jour les liens des enseignants
+            function updateEnseignantLinks(selectedSession) {
+                enseignantLinks.forEach(link => {
+                    const enseignantId = link.dataset.enseignantId;
+                    link.href = `/gestion-emploi-temps/enseignant/${enseignantId}?session=${selectedSession}`;
+                });
+            }
+
+            // Ajouter un écouteur d'événements au changement de session
+            sessionSelect.addEventListener("change", function(event) {
+                const selectedSession = event.target.value;
+                console.log(selectedSession);
+
+                // Mettre à jour les liens des enseignants avec la nouvelle session
+                updateEnseignantLinks(selectedSession);
+            });
+
+            // Ajouter un écouteur d'événements pour le clic sur chaque lien d'enseignant
+            enseignantLinks.forEach(link => {
+                link.addEventListener("click", function(event) {
+                    // Vérifier si une session a été sélectionnée
+                    const selectedSession = sessionSelect.value;
+                    if (!selectedSession) {
+                        alert("Veuillez sélectionner une session avant de continuer.");
+                        event.preventDefault(); // Empêcher le lien d'être suivi
+                    }
+                });
+            });
+
+            // Initialiser les liens des enseignants avec la première session dès que la page est chargée
+            const firstSessionOption = sessionSelect.querySelector("option:first-child");
+            const firstSessionId = firstSessionOption.value;
+            updateEnseignantLinks(firstSessionId);
+        });
+    </script>
+</body>
+</html>
+

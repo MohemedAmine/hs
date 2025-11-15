@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saisie de l'Emploi du Temps</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+       .success-alert {
+            padding: 20px;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            margin-block-end: 15px;
+            display: none; /* Hidden by default */
+        }
+        .error-alert{
+            padding: 20px;
+            background-color: red; /* Green */
+            color: white;
+            margin-block-end: 15px;
+            display: none; /* Hidden by default */
+        }
+
+        .closebtn {
+            margin-inline-start: 15px;
+            color: white;
+            font-weight: bold;
+            float: inline-end;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .closebtn:hover {
+            color: black;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            block-size: 100vh;
+        }
+
+        .form-container {
+            inline-size: 80%;
+            margin: 20px;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-block-end: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-block-end: 20px;
+            text-align: start;
+        }
+
+        .form-group label {
+            display: block;
+            margin-block-end: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        #emploi-table {
+            inline-size: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+
+        #emploi-table th, #emploi-table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        #emploi-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h1>Saisie de l'Emploi du Temps</h1>
+    <form id="emploi-form" action="/gestion-emploi-temps/saisir-emploi-temps" method="POST">
+
+        <div class="form-group">
+            <label for="promotion">Promotion :</label>
+            <select name="promotion" id="promotion">
+                <% promotions.forEach(promotion => { %>
+                    <option value="<%= promotion._id %>">
+                        <%= promotion.annee %> année de <%= promotion.niveau %>
+                    </option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="session">Semestre :</label>
+            <select name="session" id="session">
+                <% sessions.forEach(session => { %>
+                    <option value="<%= session._id %>">
+                        <%= session.begin.getDate() %> / <%= session.begin.getMonth() + 1 %> / <%= session.begin.getFullYear() %> -
+                        <%= session.end.getDate() %> / <%= session.end.getMonth() + 1 %> / <%= session.end.getFullYear() %>
+                    </option>
+                <% }) %>
+            </select>
+        </div>
+    
+    
+        <table id="emploi-table">
+            <thead>
+            <tr>
+                <th>Jour</th>
+                <th>Enseignant</th>
+                <th>Matières</th>
+                <th>Type de Séance</th>
+                <th>Horaire de la séance</th>
+                <th>Salle</th>
+                <th>Groupe</th>
+            </tr>
+            </thead>
+            <tbody id="table-body">
+            <!-- Lignes pour la saisie des emplois -->
+            <tr id="first-row">
+                <td>
+                    <select name="jour" id="jour">
+                        <option value="Samedi">Samedi</option>
+                        <option value="Dimanche">Dimanche</option>
+                        <option value="Lundi">Lundi</option>
+                        <option value="Mardi">Mardi</option>
+                        <option value="Mercredi">Mercredi</option>
+                        <option value="Jeudi">Jeudi</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="enseignant" id="enseignant"></select>
+                </td>
+                <td>
+                    <select name="module" id="module"></select>
+                </td>
+                <td>
+                    <select name="typeSeance" id="typeSeance">
+                        <option value="Cours">Cour</option>
+                        <option value="TD">TD</option>
+                        <option value="TP">TP</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" name="tempsSeance" id="tempsSeance" required>
+                </td>
+                <td>
+                    <select name="salle" id="salle">
+                        <% salles.forEach(salle => { %>
+                            <option value="<%= salle._id %>">
+                                <%= salle.numero %> - Capacité: <%= salle.capacite %>
+                            </option>
+                        <% }) %>
+                    </select>
+                </td>
+                <td>
+                    <select name="groupe" id="groupe"></select>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="success-alert" id="success-alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+            <span id="alert-success"></span>
+        </div>
+        <div class="error-alert" id="error-alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+            <span id="alert-error"></span>
+        </div>
+        
+        
+        <button type="submit" id="addRowButton" class="btn-primary">Ajouter une ligne</button>
+        <a id="terminer-link" class="btn-primary" href="/gestion-emploi-temps/emploi-temps">Terminer</a>
+    </form>
+</div>
+<script>
+    // Nouvelle fonction pour ajouter une ligne avec des champs vides
+
+
+document.addEventListener("DOMContentLoaded", async function () {
+    const promotionSelect = document.getElementById("promotion");
+    const sessionSelect = document.getElementById("session");
+    const enseignantSelect = document.getElementById("enseignant");
+    const moduleSelect =  document.getElementById("module");
+    const groupeSelect = document.getElementById("groupe");
+    const tableBody = document.getElementById("table-body");
+    const emploiForm = document.getElementById("emploi-form");
+    
+
+  
+    // Ajouter un écouteur d'événements pour la soumission du formulaire
+    emploiForm.addEventListener("submit", async function (event) {
+        event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+
+        // Récupérer les données du formulaire
+        const formData = new FormData(emploiForm);
+       
+// Créer une Map pour stocker les données du formulaire
+const formDataObj = {};
+
+// Itérer sur les paires clé-valeur de formData et les stocker dans la Map
+for (let pair of formData.entries()) {
+    formDataObj[pair[0]] = pair[1];
+}
+
+// Convertir l'objet en format JSON
+const formDataJSON = JSON.stringify(formDataObj);
+        try {
+            // Envoyer la requête POST pour ajouter les données à la base de données
+            const response = await fetch("/gestion-emploi-temps/saisir-emploi-temps", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json" // Spécifier le type de contenu JSON
+                },
+                body: formDataJSON // Convertir la Map en tableau de paires clé-valeur et le convertir en JSON
+            });
+          
+        
+            if (!response.ok) {
+                throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+            }
+
+            // Récupérer les données de la réponse JSON
+            const newData = await response.json();
+
+            // Ajouter une nouvelle ligne dans le tableau avec les données ajoutées
+      
+            if(newData.data){addNewRow(newData.data)}
+            
+            const alertBoxSuccess = document.getElementById('success-alert');
+const alertBoxError = document.getElementById('error-alert');
+const alertMessageSuccess = document.getElementById('alert-success');
+const alertMessageError = document.getElementById('alert-error');
+
+alertMessageSuccess.innerText = '';
+alertMessageError.innerText = '';
+
+// Dans votre code, utilisez des constantes pour identifier les alertes
+// Utilisez 'none' pour masquer une alerte
+alertBoxSuccess.style.display = 'none';
+alertBoxError.style.display = 'none';
+
+if (newData.success) {
+    // Afficher l'alerte de succès et masquer l'alerte d'erreur
+    alertMessageSuccess.innerText = newData.message;
+    alertBoxSuccess.style.display = 'block';
+    alertBoxError.style.display = 'none';
+} else {
+    // Afficher l'alerte d'erreur et masquer l'alerte de succès
+    alertMessageError.innerText = newData.message;
+    alertBoxError.style.display = 'block';
+    alertBoxSuccess.style.display = 'none';
+}
+ }catch (error) {
+            
+        } 
+    });
+
+    // Ajouter des écouteurs d'événements pour les changements de promotion, de session et d'enseignant
+    promotionSelect.addEventListener("change", updateEnseignantsAndModules);
+    sessionSelect.addEventListener("change", updateEnseignantsAndModules);
+    enseignantSelect.addEventListener("change", updateModules); // Mettre à jour les modules lorsque l'enseignant change
+    promotionSelect.addEventListener("change", updateGroupes);
+  
+
+    function addNewRow(data) {
+     
+       if (data.jour && data.enseignant && data.module&& data.typeSeance&& data.tempsSeance&& data.salle && data.groupe) {
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td>${data.jour}</td>
+            <td>${data.enseignant}</td>
+            <td>${data.module}</td>
+            <td>${data.typeSeance}</td>
+            <td>${data.tempsSeance}</td>
+            <td>${data.salle}</td>
+            <td>${data.groupe}</td>
+        `;
+        tableBody.appendChild(newRow);
+    }
+    }
+
+    async function updateEnseignantsAndModules() {
+        await updateEnseignants();
+        await updateModules();
+        await updateGroupes();
+    }
+
+    async function updateEnseignants() {
+        const selectedPromotion = promotionSelect.value;
+        const selectedSession = sessionSelect.value;
+
+        try {
+            const enseignantsResponse = await fetch(`/getEnseignants?promotion=${selectedPromotion}&session=${selectedSession}`);
+            if (!enseignantsResponse.ok) {
+                throw new Error(`Error ${enseignantsResponse.status}: ${enseignantsResponse.statusText}`);
+            }
+            const enseignantsData = await enseignantsResponse.json();
+            enseignantSelect.innerHTML = "";
+            // Assurez-vous que les données sont bien un tableau d'enseignants
+            if (Array.isArray(enseignantsData.enseignants) && enseignantsData.enseignants.length > 0) {
+                enseignantsData.enseignants.forEach(enseignant => {
+                    const option = document.createElement("option");
+                    option.value = enseignant._id.toString();
+                    option.textContent = enseignant.nom;
+                    enseignantSelect.appendChild(option);
+                });
+            } else {
+                // Afficher un message si aucun enseignant n'est disponible
+                const defaultOption = document.createElement("option");
+                defaultOption.textContent = "Aucun enseignant disponible";
+                enseignantSelect.appendChild(defaultOption);
+            }
+        } catch (error) {
+            console.error("Error updating enseignants:", error);
+        }
+    }
+
+    async function updateModules() {
+        const selectedPromotion = promotionSelect.value;
+        const selectedSession = sessionSelect.value;
+        const selectedEnseignant = enseignantSelect.value;
+
+        try {
+            const modulesResponse = await fetch(`/getModules?enseignant=${selectedEnseignant}&promotion=${selectedPromotion}&session=${selectedSession}`);
+            if (!modulesResponse.ok) {
+                throw new Error(`Error ${modulesResponse.status}: ${modulesResponse.statusText}`);
+            }
+            const modulesData = await modulesResponse.json();
+            const moduleSelects = document.querySelectorAll("select[name='module']");
+            moduleSelects.forEach(moduleSelect => {
+                moduleSelect.innerHTML = "";
+                // Assurez-vous que les données sont bien un tableau de modules
+                if (Array.isArray(modulesData.modules) && modulesData.modules.length > 0) {
+                    modulesData.modules.forEach(module => {
+                        const option = document.createElement("option");
+                        option.value = module._id.toString();
+                        option.textContent = module.nom;
+                        moduleSelect.appendChild(option);
+                    });
+                } else {
+                    // Afficher un message si aucun module n'est disponible
+                    const defaultOption = document.createElement("option");
+                    defaultOption.textContent = "Aucun module disponible";
+                    moduleSelect.appendChild(defaultOption);
+                }
+            });
+        } catch (error) {
+            console.error("Error updating modules:", error);
+        }
+    }
+
+
+
+// Définir la fonction pour mettre à jour les groupes
+async function updateGroupes() {
+    const selectedPromotion = promotionSelect.value;
+
+    try {
+        const groupesResponse = await fetch(`/getGroupes?promotion=${selectedPromotion}`);
+        if (!groupesResponse.ok) {
+            throw new Error(`Error ${groupesResponse.status}: ${groupesResponse.statusText}`);
+        }
+        const groupesData = await groupesResponse.json();
+        groupeSelect.innerHTML = "";
+        // Assurez-vous que les données sont bien un tableau de groupes
+        if (Array.isArray(groupesData.groupes) && groupesData.groupes.length > 0) {
+            groupesData.groupes.forEach(groupe => {
+                const option = document.createElement("option");
+                option.value = groupe._id.toString();
+                option.textContent = groupe.nom;
+                groupeSelect.appendChild(option);
+            });
+        } else {
+            // Afficher un message si aucun groupe n'est disponible
+            const defaultOption = document.createElement("option");
+            defaultOption.textContent = "Aucun groupe disponible";
+            groupeSelect.appendChild(defaultOption);
+        }
+    } catch (error) {
+        console.error("Error updating groupes:", error);
+    }
+}
+
+    // Appeler la fonction updateEnseignantsAndModules une fois que la page est chargée
+    updateEnseignantsAndModules();
+});
+
+
+</script>
+</body>
+</html>
+

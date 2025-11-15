@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Absence</title>
+  <style>
+    body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  block-size: 100vh;
+  margin: 0;
+}
+
+.container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-inline-size: 500px;
+  inline-size: 100%;
+}
+
+.form-header {
+  text-align: center;
+  margin-block-end: 20px;
+}
+
+.form-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.form-group {
+  margin-block-end: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-block-end: 5px;
+  font-weight: bold;
+  color: #333;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  inline-size: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+.form-group textarea {
+  resize: vertical;
+}
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  inline-size: 100%;
+  box-sizing: border-box;
+}
+button:hover {
+  background-color: #0056b3;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="form-header">
+      <h2>Add Teacher Absence</h2>
+    </div>
+    <form id="absenceForm" action="/teacher-absence" method="POST">
+      <div class="form-group">
+        <label for="enseignantId">Teacher ID</label>
+        <input type="text" id="enseignantId" name="enseignantId" required>
+      </div>
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" required>
+      </div>
+      <div class="form-group">
+        <label for="typeSeance">Type of Session</label>
+        <select id="typeSeance" name="typeSeance" required>
+          <option value="Cours">Cours</option>
+          <option value="TD">TD</option>
+          <option value="TP">TP</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="tempsSeance">Session Time</label>
+        <input type="text" id="tempsSeance" name="tempsSeance" placeholder="14:00 - 16:00" required>
+      </div>
+      <div class="form-group">
+        <label for="reason">Reason</label>
+        <textarea id="reason" name="reason" required></textarea>
+      </div>
+      <button type="submit">Add Absence</button>
+    </form>
+  </div>
+  <script>
+   document.getElementById('absenceForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const enseignantId = document.getElementById('enseignantId').value;
+  const date = document.getElementById('date').value;
+  const typeSeance = document.getElementById('typeSeance').value;
+  const tempsSeance = document.getElementById('tempsSeance').value;
+  const reason = document.getElementById('reason').value;
+
+  fetch('/teacher-absence', {  // Assurez-vous que le chemin correspond bien à vos routes
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      enseignantId,
+      date,
+      typeSeance,
+      tempsSeance,
+      reason
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert('Absence added successfully!');
+    document.getElementById('absenceForm').reset();
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+});
+
+
+  </script>
+</body>
+</html>

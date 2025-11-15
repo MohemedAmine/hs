@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de l'emploi du temps</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-inline-size: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Bouton */
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestion de l'emploi du temps</h1>
+        <p>Bienvenue sur la plateforme de gestion de l'emploi du temps. Vous pouvez gérer les emplois du temps des enseignants ici.</p>
+        <p>Commencez par sélectionner une action :</p>
+        <div style="text-align: center;">
+            <a href="/gestion-emploi-temps/emploi-du-temps" class="btn">Ajouter un emploi du temps</a>
+            <a href="#" class="btn" style="margin-inline-start: 20px;">Modifier un emploi du temps</a>
+            <a href="#" class="btn" style="margin-inline-start: 20px;">Supprimer un emploi du temps</a>
+        </div>
+    </div>
+</body>
+</html>

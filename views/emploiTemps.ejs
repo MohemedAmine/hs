@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link rel="icon" href="#" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emploi du Temps</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #343a40;
+        }
+        .timetable-table {
+            inline-size: 100%;
+            margin-block-start: 20px;
+            border-collapse: collapse;
+        }
+        .timetable-table th, .timetable-table td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            text-align: center;
+        }
+        .timetable-table th {
+            background-color: #f2f2f2;
+            color: #495057;
+        }
+        .timetable-table td {
+            background-color: #ffffff;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Emploi du Temps</h1>
+        <div class="form-group">
+            <label for="session">Sélectionnez une semestre :</label>
+            <select class="form-control"  name="session" id="session" onchange="fetchTimetable()">
+                <% sessions.forEach(session => { %>
+                    <option value="<%= session._id %>">
+                        <%= session.begin.getDate() %> / <%= session.begin.getMonth() + 1 %> / <%= session.begin.getFullYear() %> -
+                        <%= session.end.getDate() %> / <%= session.end.getMonth() + 1 %> / <%= session.end.getFullYear() %>
+                    </option>
+                <% }) %>
+            </select>
+        </div>
+
+        <input type="hidden" id="teacherId" value="<%= enseignantId %>">
+    
+        <div id="timetable">
+            <table class="table timetable-table">
+                <thead>
+                    <tr>
+                        <th>Jour</th>
+                        <th>Heure</th>
+                        <th>Module</th>
+                        <th>Promotion</th>
+                        <th>Salle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les données d'emploi du temps seront ajoutées ici dynamiquement -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchTimetable();
+        });
+
+        function fetchTimetable() {
+            const session = document.getElementById('session').value;
+            const teacherId = document.getElementById('teacherId').value;
+            
+            fetch(`/emploi-du-temps?teacherId=${teacherId}&session=${session}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    displayTimetable(data);
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                    document.getElementById('timetable').innerText = 'Erreur lors de la récupération de l\'emploi du temps.';
+                });
+        }
+
+        function displayTimetable(timetable) {
+            const timetableTable = document.querySelector('.timetable-table tbody');
+            timetableTable.innerHTML = '';
+            if (!timetable || timetable.length === 0) {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 5; // Adjusted to match the number of columns
+                cell.textContent = 'Aucun emploi du temps disponible pour cette session.';
+                row.appendChild(cell);
+                timetableTable.appendChild(row);
+                return;
+            }
+
+            timetable.forEach(item => {
+                const row = document.createElement('tr');
+
+                const dayCell = document.createElement('td');
+                dayCell.textContent = item.jour;
+                row.appendChild(dayCell);
+
+                const timeCell = document.createElement('td');
+                timeCell.textContent = item.tempsSeance;
+                row.appendChild(timeCell);
+
+                const moduleCell = document.createElement('td');
+                moduleCell.textContent = item.typeSeance + ' ' + item.module.nom;
+                row.appendChild(moduleCell);
+
+                const promotionCell = document.createElement('td');
+                promotionCell.textContent = item.promotion.annee + ' année de ' + item.promotion.niveau;
+                row.appendChild(promotionCell);
+
+                const salleCell = document.createElement('td');
+                salleCell.textContent = item.salle.numero;
+                row.appendChild(salleCell);
+
+                timetableTable.appendChild(row);
+            });
+        }
+    </script> 
+</body>
+</html>

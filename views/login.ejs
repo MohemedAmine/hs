@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Login</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .login-container {
+            max-inline-size: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-block-end: 20px;
+        }
+
+        .btn-login {
+            background-color: #28a745;
+            color: #fff;
+            inline-size: 100%;
+        }
+
+        .btn-login:hover {
+            background-color: #218838;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-block-start: 10px;
+        }
+    </style>
+</head>
+<body>
+   
+    <div class="container login-container">
+        <h2 class="text-center mb-4">Login</h2>
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="email">email</label>
+                <input type="text" class="form-control" name="email" placeholder="Enter your email">
+                <% let email = validationErrors.find(err => err.path === 'email')  %>
+                <% if(email) { %>
+                                   
+                    <p class="alert alert-danger">
+                        <%= email.msg %>
+
+                    </p>
+
+                    <% } %>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" placeholder="Enter your password">
+                <% let password = validationErrors.find(err => err.path === 'password')  %>
+                <% if(password) { %>
+                                   
+                    <p class="alert alert-danger">
+                        <%= password.msg %>
+                    </p>
+
+                    <% } %>
+            </div>
+
+            <button type="submit" class="btn btn-login" >Login</button>
+        </form>
+        
+          
+            <% if(authError) {%>
+                <br>
+                <p class="alert alert-danger">
+                    <%= authError %>
+                </p>
+                <% } %>
+      
+         
+        <br>
+        <p class="signup-link">Don't have an account? <a href="/signUp">Sign up</a></p>
+    </div>
+
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord Enseignant</title>
+  
+</head>
+<style>body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    block-size: 100vh;
+}
+
+.sidebar {
+    background-color: #2c3e50;
+    color: white;
+    inline-size: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    flex-shrink: 0; 
+}
+
+.logo img {
+    inline-size: 100px;
+    margin-block-end: 20px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    inline-size: 100%;
+}
+
+nav ul li {
+    inline-size: 100%;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+nav ul li a.active, nav ul li a:hover {
+    background-color: #34495e;
+}
+
+.logout {
+    margin-block-start: auto;
+}
+
+.logout a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #e74c3c;
+}
+
+.main-content {
+    flex-grow: 1;
+    background-color: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Activer le défilement vertical */
+}
+
+
+header {
+    background-color: #2980b9;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+}
+
+.profile img {
+    border-radius: 50%;
+    inline-size: 50px;
+    block-size: 50px;
+    margin-inline-end: 10px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome {
+    background-color: #3498db;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.welcome .date {
+    position: absolute;
+    inset-block-start: 10px;
+    inset-inline-end: 20px;
+}
+
+.welcome-message {
+    margin-block-end: 20px;
+}
+
+.school-image {
+    inline-size: 100%;
+    border-radius: 10px;
+    margin-block-start: 20px;
+}
+
+.modules {
+    padding: 20px;
+    flex-grow: 1;
+    box-sizing: border-box;
+}
+
+.modules h2 {
+    margin-block-end: 20px;
+}
+
+.module-list {
+    display: flex;
+    justify-content: space-around;
+}
+
+.module {
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    inline-size: 30%;
+    box-sizing: border-box;
+}
+
+.module img {
+    inline-size: 100px;
+    block-size: 100px;
+    margin-block-end: 10px;
+}
+
+
+</style>
+<body>
+    <%- include('./parts/sideBar.html') %>
+    <div class="main-content">
+        <header>
+            <div class="profile">
+                <img src="" alt="Profile Picture">
+                <div class="profile-info">
+                    <span>Yousfi Naouafil</span>
+                    <span>Maître assistant</span>
+                </div>
+            </div>
+        </header>
+        <section class="welcome">
+            <div class="welcome-message">
+                <p class="date">15 mars, 2024</p>
+                <h1>Bienvenue, Naouafil</h1>
+                <p>Restez informé en consultant régulièrement votre tableau de bord enseignant</p>
+            </div>
+            <img src="" alt="Image ESI Sidi Bel Abbes" class="school-image">
+        </section>
+        <section class="modules">
+            <h2>Modules enseignés</h2>
+            <div class="module-list">
+                <div class="module">
+                    <img src="" alt="Architecture des ordinateurs">
+                    <p>Architecture des ordinateurs</p>
+                </div>
+                <div class="">
+                    <img src="" alt="Systèmes multimédia">
+                    <p>Systèmes multimédia</p>
+                </div>
+                <div class="module">
+                    <img src="" alt="Base de données">
+                    <p>Base de données</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+</body>
+</html>

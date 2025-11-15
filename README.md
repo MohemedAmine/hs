@@ -70,8 +70,8 @@ A comprehensive Node.js Express application for managing educational institution
 ## 🚀 Quick Start
 
 ```bash
-# 1. Clone/download the project
-cd "d:\amine things\course\hs"
+# 1. Clone the project from GitHub
+git clone https://github.com/MohemedAmine/hs.git "d:\amine things\course\hs"
 
 # 2. Install dependencies
 npm install
@@ -86,6 +86,7 @@ mongod
 node app.js
 
 # Application available at http://localhost:3000
+
 ```
 
 ## 📦 Installation
@@ -102,7 +103,7 @@ node app.js
 1. **Clone or download the project**
 
    ```bash
-   cd "d:\amine things\course\hs"
+   git clone https://github.com/MohemedAmine/hs.git "d:\amine things\course\hs"
    ```
 
 2. **Install dependencies**
@@ -374,3 +375,4 @@ ISC
 **Last Updated:** November 15, 2025
 
 For support or questions, please contact the project author.
+

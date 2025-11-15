@@ -71,7 +71,7 @@ A comprehensive Node.js Express application for managing educational institution
 
 ```bash
 # 1. Clone the project from GitHub
-git clone https://github.com/MohemedAmine/hs.git "d:\amine things\course\hs"
+git clone https://github.com/MohemedAmine/hs.git
 
 # 2. Install dependencies
 npm install
@@ -375,4 +375,5 @@ ISC
 **Last Updated:** November 15, 2025
 
 For support or questions, please contact the project author.
+
 
